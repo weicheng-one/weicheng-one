@@ -16,6 +16,7 @@ coverage
 .prettierrc.json
 .eslintrc.cjs
 typings
+.env.*
 
 /cypress/videos/
 /cypress/screenshots/
