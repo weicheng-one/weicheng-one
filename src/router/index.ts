@@ -9,14 +9,16 @@ const router = createRouter({
       name: "home",
       component: HomeView,
     },
-    // {
-    //   path: "/rockets",
-    //   name: "rockets",
-    //   // route level code-splitting
-    //   // this generates a separate chunk (RocketsView.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import("../views/RocketsView.vue"),
-    // },
+    {
+      path: "/:slug",
+      name: "post",
+      component: () => import("@/views/PostView.vue"),
+    },
+    {
+      path: "/admin/post-edit",
+      name: "post-edit",
+      component: () => import("@/views/PostEditView.vue"),
+    },
   ],
 });
 

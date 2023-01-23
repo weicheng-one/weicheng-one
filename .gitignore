@@ -13,10 +13,6 @@ dist
 dist-ssr
 coverage
 *.local
-.prettierrc.json
-.eslintrc.cjs
-typings
-.env.*
 
 /cypress/videos/
 /cypress/screenshots/
@@ -30,3 +26,7 @@ typings
 *.njsproj
 *.sln
 *.sw?
+
+.eslintrc.cjs
+.prettierrc.json
+typings

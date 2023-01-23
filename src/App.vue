@@ -1,9 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+//Firebase
+import { useFirebaseStore } from "@/stores/FirebaseStore";
+useFirebaseStore().firebaseInit();
+</script>
 <template>
   <RouterView />
 </template>
-<style>
-li {
-  list-style-type: none;
-}
-</style>
