@@ -9,12 +9,16 @@
     "build-only": "vite build"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-vue": "^4.0.1",
     "@formkit/vue": "^1.0.0-beta.12",
     "@headlessui/vue": "^1.7.7",
     "@heroicons/vue": "^2.0.13",
+    "@tiptap/extension-blockquote": "^2.0.0-beta.209",
+    "@tiptap/extension-bubble-menu": "^2.0.0-beta.209",
+    "@tiptap/extension-highlight": "^2.0.0-beta.209",
+    "@tiptap/extension-text-align": "^2.0.0-beta.209",
+    "@tiptap/starter-kit": "^2.0.0-beta.209",
+    "@tiptap/vue-3": "^2.0.0-beta.209",
     "@vueuse/core": "^9.11.1",
-    "ckeditor5-custom-build": "file:ckeditor5",
     "firebase": "^9.16.0",
     "pinia": "^2.0.28",
     "vue": "^3.2.45",

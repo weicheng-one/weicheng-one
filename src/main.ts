@@ -9,13 +9,9 @@ import router from "./router";
 // Import CSS
 import "./assets/main.css";
 
-//CKEditor
-import CKEditor from "@ckeditor/ckeditor5-vue";
-
 const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
 app.use(plugin, defaultConfig);
-app.use(CKEditor);
 app.mount("#app");

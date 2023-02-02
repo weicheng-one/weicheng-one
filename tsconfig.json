@@ -6,7 +6,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "typeRoots": ["./typings", "./node_modules/@types/"]
+    "types": ["vite/client"],
+    "typeRoots": ["./node_modules/@types/"]
   },
 
   "references": [
