@@ -5,7 +5,6 @@ import PostEditor from "@/components/PostEditor.vue";
 <template>
   <PostEditHeading />
   <PostEditor />
-  <FileManager />
 </template>
 <style>
 @import url(@/assets/content-styles.css);

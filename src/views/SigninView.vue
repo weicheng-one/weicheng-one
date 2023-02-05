@@ -74,8 +74,6 @@ function submitHandler(data: Data) {
               >Forgot your password?</RouterLink
             >
           </div>
-
-          <pre wrap>{{ value }}</pre>
         </FormKit>
       </div>
     </div>

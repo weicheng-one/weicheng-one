@@ -14,11 +14,6 @@ const router = createRouter({
       component: () => import("@/views/SigninView.vue"),
     },
     {
-      path: "/:slug",
-      name: "post",
-      component: () => import("@/views/PostView.vue"),
-    },
-    {
       path: "/admin/post-edit",
       name: "post-edit",
       component: () => import("@/views/PostEditView.vue"),

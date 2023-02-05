@@ -1,1 +1,0 @@
-<template>PostView</template>
