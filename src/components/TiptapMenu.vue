@@ -2,7 +2,6 @@
 import TiptapMenuFirstButton from "./TiptapMenuFirstButton.vue";
 import TiptapMenuMidButton from "./TiptapMenuMidButton.vue";
 import TiptapMenuLastButton from "./TiptapMenuLastButton.vue";
-import { useFileManagerStore } from "@/stores/FileManagerStore";
 import {
   Bars3Icon,
   Bars3BottomLeftIcon,
@@ -17,7 +16,6 @@ const props = defineProps(["editor"]);
   <span class="isolate inline-flex rounded-md shadow-sm">
     <TiptapMenuFirstButton
       @click-button="props.editor.chain().focus().toggleCode().run()"
-      :class="{ 'is-active': editor.isActive('highlight') }"
       ><CodeBracketIcon class="block h-6 w-6" aria-hidden="true"
     /></TiptapMenuFirstButton>
     <TiptapMenuMidButton

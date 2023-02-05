@@ -9,7 +9,8 @@
     "build-only": "vite build"
   },
   "dependencies": {
-    "@formkit/vue": "^1.0.0-beta.12",
+    "@formkit/themes": "^1.0.0-beta.15-6f87a41",
+    "@formkit/vue": "^1.0.0-beta.15-6f87a41",
     "@headlessui/vue": "^1.7.7",
     "@heroicons/vue": "^2.0.13",
     "@tiptap/extension-blockquote": "^2.0.0-beta.209",

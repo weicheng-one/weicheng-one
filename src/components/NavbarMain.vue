@@ -10,8 +10,12 @@ import {
 } from "@headlessui/vue";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 import { PlusIcon } from "@heroicons/vue/20/solid";
-import { useFirebaseStore } from "@/stores/FirebaseStore";
-const firebaseStore = useFirebaseStore();
+import { useFireStore } from "@/stores/FireStore";
+import { useAuthStore } from "@/stores/AuthStore";
+import { useRouter } from "vue-router";
+const fireStore = useFireStore();
+const authStore = useAuthStore();
+const router = useRouter();
 </script>
 <template>
   <Disclosure as="nav" class="bg-white shadow" v-slot="{ open }">
@@ -71,7 +75,8 @@ const firebaseStore = useFirebaseStore();
         <div class="flex items-center">
           <div class="flex-shrink-0">
             <button
-              @click="firebaseStore.postNew"
+              v-if="authStore.user"
+              @click="fireStore.postNew"
               type="button"
               class="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
@@ -81,6 +86,7 @@ const firebaseStore = useFirebaseStore();
           </div>
           <div class="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
             <button
+              v-if="authStore.user"
               type="button"
               class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
@@ -113,7 +119,7 @@ const firebaseStore = useFirebaseStore();
                 <MenuItems
                   class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                 >
-                  <MenuItem v-slot="{ active }">
+                  <MenuItem v-if="authStore.user" v-slot="{ active }">
                     <a
                       href="#"
                       :class="[
@@ -123,7 +129,7 @@ const firebaseStore = useFirebaseStore();
                       >Your Profile</a
                     >
                   </MenuItem>
-                  <MenuItem v-slot="{ active }">
+                  <MenuItem v-if="authStore.user" v-slot="{ active }">
                     <a
                       href="#"
                       :class="[
@@ -134,14 +140,26 @@ const firebaseStore = useFirebaseStore();
                     >
                   </MenuItem>
                   <MenuItem v-slot="{ active }">
-                    <a
-                      href="#"
+                    <button
+                      v-if="authStore.user"
+                      @click="authStore.signOutUser"
                       :class="[
-                        active ? 'bg-gray-100' : '',
-                        'block px-4 py-2 text-sm text-gray-700',
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        'block w-full px-4 py-2 text-left text-sm',
                       ]"
-                      >Sign out</a
                     >
+                      Sign out
+                    </button>
+                    <RouterLink
+                      v-else
+                      :to="{ name: 'signin' }"
+                      :class="[
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        'block w-full px-4 py-2 text-left text-sm',
+                      ]"
+                    >
+                      Sign in
+                    </RouterLink>
                   </MenuItem>
                 </MenuItems>
               </transition>
@@ -202,23 +220,33 @@ const firebaseStore = useFirebaseStore();
         </div>
         <div class="mt-3 space-y-1">
           <DisclosureButton
+            v-if="authStore.user"
             as="a"
             href="#"
             class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 sm:px-6"
             >Your Profile</DisclosureButton
           >
           <DisclosureButton
+            v-if="authStore.user"
             as="a"
             href="#"
             class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 sm:px-6"
             >Settings</DisclosureButton
           >
           <DisclosureButton
-            as="a"
-            href="#"
-            class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 sm:px-6"
-            >Sign out</DisclosureButton
-          >
+            v-if="authStore.user"
+            as="button"
+            @click="authStore.signOutUser"
+            class="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 sm:px-6"
+            >Sign out
+          </DisclosureButton>
+          <DisclosureButton
+            v-else
+            as="button"
+            @click="router.push({ name: 'signin' })"
+            class="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 sm:px-6"
+            >Sign in
+          </DisclosureButton>
         </div>
       </div>
     </DisclosurePanel>

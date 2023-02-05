@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import Notification from "@/components/Notification.vue";
 //Firebase
-import { useFirebaseStore } from "@/stores/FirebaseStore";
-useFirebaseStore().firebaseInit();
+import { useInitStore } from "@/stores/InitStore";
+useInitStore().firebaseInit();
 </script>
 <template>
   <RouterView />
+  <Notification />
 </template>

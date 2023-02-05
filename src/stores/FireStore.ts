@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { initializeApp } from "firebase/app";
 import { useRouter } from "vue-router";
 import { usePostStore } from "@/stores/PostStore";
 import {
@@ -12,21 +11,9 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
-export const useFirebaseStore = defineStore("firebase", () => {
+export const useFireStore = defineStore("fireStore", () => {
   const router = useRouter();
   const postStore = usePostStore();
-  const firebaseConfig = {
-    apiKey: "AIzaSyDtj8RpneW1SN3zh4lFMzbI_vodV6wZ4i8",
-    authDomain: "weicheng-one.firebaseapp.com",
-    projectId: "weicheng-one",
-    storageBucket: "weicheng-one.appspot.com",
-    messagingSenderId: "898063622473",
-    appId: "1:898063622473:web:0fde2127105f186b713a98",
-    measurementId: "G-5XT6EN8ZBV",
-  };
-  function firebaseInit() {
-    initializeApp(firebaseConfig);
-  }
 
   async function postNew() {
     const docRef = await addDoc(collection(getFirestore(), "posts"), {
@@ -90,6 +77,5 @@ export const useFirebaseStore = defineStore("firebase", () => {
     postPublish,
     postUpdate,
     postDraft,
-    firebaseInit,
   };
 });
