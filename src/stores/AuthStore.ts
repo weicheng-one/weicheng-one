@@ -1,27 +1,28 @@
 import { defineStore } from "pinia";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { useLocalStorage } from "@vueuse/core";
 import { useNotificationStore } from "./NotificationStore";
+import { useLocalStorage } from "@vueuse/core";
 import { useRouter } from "vue-router";
+import { ref } from "vue";
 
 export const useAuthStore = defineStore("auth", () => {
   const notificationStore = useNotificationStore();
-  const auth = getAuth();
-  const user = useLocalStorage("auth:user", auth.currentUser);
+  const auth = ref(getAuth());
+  const user = useLocalStorage("auth:user", { ...auth.value.currentUser });
   const router = useRouter();
 
   function signInUser(email: string, password: string) {
-    signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth.value, email, password)
       .then(() => {
-        user.value = auth.currentUser;
+        user.value = { ...auth.value.currentUser };
         router.push({ name: "home" });
         notificationStore.showNotification(
           0,
           "Signed in",
           `Hi ${
-            user.value?.displayName
-              ? user.value?.displayName
-              : user.value?.email
+            auth.value.currentUser?.displayName
+              ? auth.value.currentUser?.displayName
+              : auth.value.currentUser?.email
           }, welcome back!`
         );
       })
@@ -30,10 +31,9 @@ export const useAuthStore = defineStore("auth", () => {
       });
   }
   function signOutUser() {
-    signOut(auth)
+    signOut(auth.value)
       .then(() => {
-        // Sign-out successful.
-        user.value = null;
+        user.value = {};
         notificationStore.showNotification(
           0,
           "Sign-out successful.",

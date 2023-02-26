@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import NavbarMain from "@/components/NavbarMain.vue";
+import HomeHeader from "@/components/HomeHeader.vue";
+import HomeBlogSection from "@/components/HomeBlogSection.vue";
 </script>
 <template>
-  <NavbarMain />
+  <HomeHeader />
+  <HomeBlogSection />
 </template>

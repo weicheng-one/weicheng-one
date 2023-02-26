@@ -1,0 +1,121 @@
+<script setup lang="ts">
+import HomeHeader from "@/components/HomeHeader.vue";
+import ModalDelete from "@/components/ModalDelete.vue";
+import { usePostStore } from "@/stores/PostStore";
+import { usePostsStore } from "@/stores/PostsStore";
+import { useModalsStore } from "@/stores/ModalsStore";
+import { useDateFormat } from "@vueuse/core";
+import { onMounted } from "vue";
+const postStore = usePostStore();
+const postsStore = usePostsStore();
+const modalsStore = useModalsStore();
+onMounted(() => {
+  postsStore.postsAllGet();
+});
+function dateFormat(date: number) {
+  return useDateFormat(date * 1000, "YYYY/MM/DD hh:mm").value;
+}
+function showDeleteModal(title: string, postId: string) {
+  postStore.title = title === "" ? "Untitled" : title;
+  postStore.postId = postId;
+  modalsStore.showDelete = true;
+}
+</script>
+<template>
+  <HomeHeader />
+  <div class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pt-20 pb-24 sm:pb-32">
+    <div class="sm:flex sm:items-center">
+      <div class="sm:flex-auto">
+        <h1 class="text-base font-semibold leading-6 text-gray-900">Posts</h1>
+        <p class="mt-2 text-sm text-gray-700">
+          On this page, you can perform functions such as editing, creating, and
+          deleting posts, making it convenient for you to manage your posts.
+        </p>
+      </div>
+      <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+        <button
+          type="button"
+          @click="postStore.postNew"
+          class="block rounded-md bg-indigo-600 py-1.5 px-3 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          New Post
+        </button>
+      </div>
+    </div>
+    <div class="-mx-4 mt-8 sm:-mx-0">
+      <table class="min-w-full divide-y divide-gray-300">
+        <thead>
+          <tr>
+            <th
+              scope="col"
+              class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
+            >
+              Title
+            </th>
+            <th
+              scope="col"
+              class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
+            >
+              Author
+            </th>
+            <th
+              scope="col"
+              class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+            >
+              Date
+            </th>
+            <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
+              <span class="sr-only">Edit</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          class="divide-y divide-gray-200 bg-white"
+          v-if="postsStore.postsAll"
+        >
+          <tr v-for="post in postsStore.postsAll" :key="post.postId">
+            <td
+              class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
+            >
+              {{ post.title || "Untitled" }}
+            </td>
+            <td
+              class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:table-cell"
+            >
+              {{ post.authorId }}
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {{
+                post.status === "draft"
+                  ? `Last Modified ${dateFormat(post.modified.seconds)}`
+                  : `Published ${dateFormat(post.date.seconds)}`
+              }}
+            </td>
+            <td
+              class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"
+            >
+              <RouterLink
+                :to="{ name: 'post-edit', params: { postId: post.postId } }"
+                class="text-indigo-600 hover:text-indigo-900"
+                >Edit<span class="sr-only"
+                  >, {{ post.postId }}</span
+                ></RouterLink
+              >
+            </td>
+            <td
+              class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"
+            >
+              <a
+                href="javascript:;"
+                @click="showDeleteModal(post.title, post.postId)"
+                class="text-red-600 hover:text-red-900"
+                >Delete<span class="sr-only">, {{ post.postId }}</span></a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <ModalDelete />
+</template>

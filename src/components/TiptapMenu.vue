@@ -1,43 +1,25 @@
 <script setup lang="ts">
-import TiptapMenuFirstButton from "./TiptapMenuFirstButton.vue";
-import TiptapMenuMidButton from "./TiptapMenuMidButton.vue";
-import TiptapMenuLastButton from "./TiptapMenuLastButton.vue";
-import {
-  Bars3Icon,
-  Bars3BottomLeftIcon,
-  Bars3BottomRightIcon,
-  CodeBracketIcon,
-  CodeBracketSquareIcon,
-  PencilIcon,
-} from "@heroicons/vue/24/outline";
-const props = defineProps(["editor"]);
+import { useStorageStore } from "@/stores/StorageStore";
+const storageStore = useStorageStore();
+defineEmits(["toggleBold", "toggleCode"]);
 </script>
 <template>
-  <span class="isolate inline-flex rounded-md shadow-sm">
-    <TiptapMenuFirstButton
-      @click-button="props.editor.chain().focus().toggleCode().run()"
-      ><CodeBracketIcon class="block h-6 w-6" aria-hidden="true"
-    /></TiptapMenuFirstButton>
-    <TiptapMenuMidButton
-      @click-button="props.editor.chain().focus().toggleCodeBlock().run()"
-      ><CodeBracketSquareIcon class="block h-6 w-6" aria-hidden="true"
-    /></TiptapMenuMidButton>
-    <TiptapMenuMidButton
-      @click-button="props.editor.chain().focus().toggleHighlight().run()"
-      ><PencilIcon class="block h-6 w-6" aria-hidden="true"
-    /></TiptapMenuMidButton>
-    <TiptapMenuMidButton
-      @click-button="props.editor.chain().focus().setTextAlign('left').run()"
-      ><Bars3BottomLeftIcon class="block h-6 w-6" aria-hidden="true"
-    /></TiptapMenuMidButton>
-    <TiptapMenuMidButton
-      @click-button="props.editor.chain().focus().setTextAlign('center').run()"
-    >
-      <Bars3Icon class="block h-6 w-6" aria-hidden="true"
-    /></TiptapMenuMidButton>
-    <TiptapMenuLastButton
-      @click-button="props.editor.chain().focus().setTextAlign('right').run()"
-      ><Bars3BottomRightIcon class="block h-6 w-6" aria-hidden="true"
-    /></TiptapMenuLastButton>
-  </span>
+  <button
+    @click="$emit('toggleBold')"
+    class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-3 py-2 text-xl text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+  >
+    <i class="ri-bold"></i>
+  </button>
+  <button
+    @click="storageStore.getFileAll()"
+    class="relative -ml-px inline-flex items-center border border-gray-300 bg-white px-3 py-2 text-xl text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+  >
+    <i class="ri-image-fill"></i>
+  </button>
+  <button
+    class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-white px-3 py-2 text-xl text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+    @click="$emit('toggleCode')"
+  >
+    <i class="ri-code-view"></i>
+  </button>
 </template>
