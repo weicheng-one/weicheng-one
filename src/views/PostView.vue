@@ -27,7 +27,7 @@ const post = postsStore.postsPublished.find(
       >
         {{ post.title }}
       </h1>
-      <div class="mb-10 mx-12">
+      <div class="mb-10">
         <time
           :datetime="
             useDateFormat(post.date.seconds * 1000, 'YYYY-MM-DD').value
