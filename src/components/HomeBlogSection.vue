@@ -83,10 +83,9 @@ function toPostView(post: Post) {
                   {{ post.title }}
                 </a>
               </h3>
-              <div
-                class="mt-5 text-sm leading-6 text-gray-600 line-clamp-3 md:line-clamp-none"
-                v-html="post.excerpt"
-              ></div>
+              <div class="mt-5 text-sm leading-6 text-gray-600 line-clamp-3">
+                {{ post.excerpt }}
+              </div>
             </div>
           </div>
         </article>
