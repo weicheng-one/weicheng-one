@@ -2,73 +2,102 @@
 import {
   useEditor,
   EditorContent,
-  FloatingMenu,
   BubbleMenu,
+  FloatingMenu,
 } from "@tiptap/vue-3";
 import { usePostStore } from "@/stores/PostStore";
-import StarterKit from "@tiptap/starter-kit";
-import Highlight from "@tiptap/extension-highlight";
+import { useEditorStore } from "@/stores/EditorStore";
+import { useStorageStore } from "@/stores/StorageStore";
 import Image from "@tiptap/extension-image";
-import PostEditFileManager from "@/components/PostEditFileManager.vue";
+import Highlight from "@tiptap/extension-highlight";
+import StarterKit from "@tiptap/starter-kit";
+import TaskItem from "@tiptap/extension-task-item";
+import TaskList from "@tiptap/extension-task-list";
+import TiptapFileManager from "@/components/TiptapFileManager.vue";
 import TiptapMenu from "@/components/TiptapMenu.vue";
 import { ref } from "vue";
-import { useStorageStore } from "@/stores/StorageStore";
 
 const postStore = usePostStore();
+const editorStore = useEditorStore();
 const storageStore = useStorageStore();
-const addMainImage = ref<boolean>(false);
+const setMainImage = ref<boolean>(false);
 const editor = useEditor({
-  extensions: [StarterKit, Image, Highlight.configure({ multicolor: true })],
+  extensions: [
+    Highlight.configure({ multicolor: true }),
+    Image,
+    StarterKit.configure({
+      heading: {
+        levels: [1, 2],
+      },
+    }),
+    TaskItem.configure({
+      nested: true,
+    }),
+    TaskList,
+  ],
   editorProps: {
     attributes: {
-      class: "rounded border-2 border-black px-5 focus:outline-none",
+      class: "border-4 border-slate-900 focus:outline-none px-4 py-5",
     },
   },
-  editable: postStore.editable,
+  editable: editorStore.editable,
   onCreate: async ({ editor }) => {
     await postStore.postGet();
-    postStore.editable = true;
+    editorStore.editable = true;
     editor.commands.setContent(postStore.content);
-    editor.setEditable(postStore.editable);
+    editor.setEditable(editorStore.editable);
   },
   onUpdate: ({ editor }) => {
-    if (postStore.autoSave) {
-      clearTimeout(postStore.timer);
+    if (editorStore.autoSave) {
+      clearTimeout(editorStore.timer);
       postStore.content = editor.getHTML();
-      postStore.timer = setTimeout(() => {
+      editorStore.timer = setTimeout(() => {
         postStore.postSave();
       }, 5000);
     } else {
-      postStore.autoSave = true;
+      editorStore.autoSave = true;
     }
   },
 });
-function addImage(url: string) {
-  if (addMainImage.value) {
+function setImage(url: string) {
+  if (setMainImage.value) {
     postStore.imageUrl = url;
-    addMainImage.value = false;
-    storageStore.open = false;
+    setMainImage.value = false;
+    storageStore.openFileManager = false;
   } else {
-    editor.value?.chain().focus().setImage({ src: url }).run();
-    storageStore.open = false;
+    editor.value?.chain().setImage({ src: url }).run();
+    editor.value?.chain().focus().enter().run();
+    storageStore.openFileManager = false;
   }
 }
+function postSave() {
+  clearTimeout(editorStore.timer);
+  editorStore.timer = setTimeout(() => {
+    postStore.postSave();
+  }, 5000);
+}
 function addMainImageHandle() {
-  storageStore.open = true;
-  addMainImage.value = true;
-}
-
-function toggleBold() {
-  editor.value?.chain().focus().toggleBold().run();
-}
-function toggleCode() {
-  editor.value?.chain().focus().toggleCode().run();
+  storageStore.openFileManager = true;
+  setMainImage.value = true;
 }
 </script>
 
 <template>
+  <div>
+    <label for="title" class="sr-only">Title</label>
+    <input
+      type="text"
+      name="title"
+      id="title"
+      :disabled="!editorStore.editable"
+      @input="postSave"
+      v-model="postStore.title"
+      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-2xl font-bold"
+      placeholder="Please enter the post title"
+    />
+  </div>
   <div
-    class="relative w-full aspect-[16/9] rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2] cursor-pointer"
+    class="relative w-full aspect-[16/9] rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2] cursor-pointer my-3"
     @click="addMainImageHandle"
   >
     <svg
@@ -90,22 +119,132 @@ function toggleCode() {
       v-else
       :src="postStore.imageUrl"
       alt=""
-      class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2] my-3"
+      class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]"
     />
     <div
       class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"
     ></div>
   </div>
-  <div v-if="editor" class="mb-3">
-    <TiptapMenu @toggle-bold="toggleBold" @toggle-code="toggleCode" />
+  <div
+    v-if="editor"
+    id="editor-header"
+    class="border-t-4 border-l-4 border-r-4 border-slate-900 rounded-t-xl p-1 flex flex-wrap items-center"
+  >
+    <TiptapMenu
+      @toggle-bold="editor?.chain().focus().toggleBold().run()"
+      @toggle-Italic="editor?.chain().focus().toggleItalic().run()"
+      @toggle-strike="editor?.chain().focus().toggleStrike().run()"
+      @toggle-code="editor?.chain().focus().toggleCode().run()"
+      @toggle-highlight="editor?.chain().focus().toggleHighlight().run()"
+      @toggle-heading-level-1="
+        editor?.chain().focus().toggleHeading({ level: 1 }).run()
+      "
+      @toggle-heading-level-2="
+        editor
+          ?.chain()
+          .focus()
+          .toggleHeading({
+            level: 2,
+          })
+          .run()
+      "
+      @set-paragraph="editor?.chain().focus().setParagraph().run()"
+      @toggle-bullet-list="editor?.chain().focus().toggleBulletList().run()"
+      @toggle-ordered-list="editor?.chain().focus().toggleOrderedList().run()"
+      @toggle-task-list="editor?.chain().focus().toggleTaskList().run()"
+      @toggle-code-block="editor?.chain().focus().toggleCodeBlock().run()"
+      @toggle-block-quote="editor?.chain().focus().toggleBlockquote().run()"
+      @set-horizontal-rule="
+        editor?.chain().focus().enter().enter().setHorizontalRule().run()
+      "
+      @set-hard-break="editor?.chain().focus().setHardBreak().run()"
+      @clear-format="editor?.chain().clearNodes().unsetAllMarks().focus().run()"
+      @set-image="storageStore.filesGet()"
+    />
   </div>
-  <FloatingMenu :editor="editor" v-if="editor">
-    <TiptapMenu @toggle-bold="toggleBold" @toggle-code="toggleCode" />
-  </FloatingMenu>
-  <BubbleMenu :editor="editor" v-if="editor" :tippy-options="{ duration: 100 }">
-    <TiptapMenu @toggle-bold="toggleBold" @toggle-code="toggleCode" />
-  </BubbleMenu>
 
-  <editor-content :editor="editor" />
-  <PostEditFileManager @add-image="addImage" />
+  <bubble-menu
+    :editor="editor"
+    :tippy-options="{ duration: 100 }"
+    v-if="editor"
+    class="bg-slate-100 rounded-xl p-1 flex flex-wrap items-center"
+  >
+    <TiptapMenu
+      @toggle-bold="editor?.chain().focus().toggleBold().run()"
+      @toggle-Italic="editor?.chain().focus().toggleItalic().run()"
+      @toggle-strike="editor?.chain().focus().toggleStrike().run()"
+      @toggle-code="editor?.chain().focus().toggleCode().run()"
+      @toggle-highlight="editor?.chain().focus().toggleHighlight().run()"
+      @toggle-heading-level-1="
+        editor?.chain().focus().toggleHeading({ level: 1 }).run()
+      "
+      @toggle-heading-level-2="
+        editor
+          ?.chain()
+          .focus()
+          .toggleHeading({
+            level: 2,
+          })
+          .run()
+      "
+      @set-paragraph="editor?.chain().focus().setParagraph().run()"
+      @toggle-bullet-list="editor?.chain().focus().toggleBulletList().run()"
+      @toggle-ordered-list="editor?.chain().focus().toggleOrderedList().run()"
+      @toggle-task-list="editor?.chain().focus().toggleTaskList().run()"
+      @toggle-code-block="editor?.chain().focus().toggleCodeBlock().run()"
+      @toggle-block-quote="editor?.chain().focus().toggleBlockquote().run()"
+      @set-horizontal-rule="
+        editor?.chain().focus().enter().enter().setHorizontalRule().run()
+      "
+      @set-hard-break="editor?.chain().focus().setHardBreak().run()"
+      @clear-format="editor?.chain().clearNodes().unsetAllMarks().focus().run()"
+      @set-image="storageStore.filesGet()"
+    />
+  </bubble-menu>
+  <floating-menu
+    :editor="editor"
+    :tippy-options="{ duration: 100 }"
+    v-if="editor"
+    class="bg-slate-100 rounded-xl p-1 flex flex-wrap items-center"
+  >
+    <TiptapMenu
+      @toggle-bold="editor?.chain().focus().toggleBold().run()"
+      @toggle-Italic="editor?.chain().focus().toggleItalic().run()"
+      @toggle-strike="editor?.chain().focus().toggleStrike().run()"
+      @toggle-code="editor?.chain().focus().toggleCode().run()"
+      @toggle-highlight="editor?.chain().focus().toggleHighlight().run()"
+      @toggle-heading-level-1="
+        editor?.chain().focus().toggleHeading({ level: 1 }).run()
+      "
+      @toggle-heading-level-2="
+        editor
+          ?.chain()
+          .focus()
+          .toggleHeading({
+            level: 2,
+          })
+          .run()
+      "
+      @set-paragraph="editor?.chain().focus().setParagraph().run()"
+      @toggle-bullet-list="editor?.chain().focus().toggleBulletList().run()"
+      @toggle-ordered-list="editor?.chain().focus().toggleOrderedList().run()"
+      @toggle-task-list="editor?.chain().focus().toggleTaskList().run()"
+      @toggle-code-block="editor?.chain().focus().toggleCodeBlock().run()"
+      @toggle-block-quote="editor?.chain().focus().toggleBlockquote().run()"
+      @set-horizontal-rule="
+        editor?.chain().focus().enter().enter().setHorizontalRule().run()
+      "
+      @set-hard-break="editor?.chain().focus().setHardBreak().run()"
+      @clear-format="editor?.chain().clearNodes().unsetAllMarks().focus().run()"
+      @set-image="storageStore.filesGet()"
+    />
+  </floating-menu>
+  <editor-content id="editor-content" :editor="editor" />
+  <div
+    id="editor-footer"
+    class="border-b-4 border-l-4 border-r-4 border-slate-900 rounded-b-xl px-3 py-1 text-xs font-semibold flex justify-end"
+  >
+    WeiCheng | Tiptap Editor
+  </div>
+  <TiptapFileManager @set-image="setImage" />
 </template>

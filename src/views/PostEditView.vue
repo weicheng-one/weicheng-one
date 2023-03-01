@@ -17,6 +17,3 @@ postStore.postId = props.postId; //儲存文章的id，更新或發布文章時�
   <PostEditHeading />
   <PostEditContent />
 </template>
-<style>
-@import url(@/assets/content-styles.css);
-</style>

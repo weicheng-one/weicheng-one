@@ -1,25 +1,83 @@
 <script setup lang="ts">
 import { useStorageStore } from "@/stores/StorageStore";
+import TiptapMenuButton from "./TiptapMenuButton.vue";
+import TiptapMenuDivider from "./TiptapMenuDivider.vue";
 const storageStore = useStorageStore();
-defineEmits(["toggleBold", "toggleCode"]);
+defineEmits([
+  "toggleBold",
+  "toggleItalic",
+  "toggleStrike",
+  "toggleCode",
+  "toggleHighlight",
+  "toggleHeadingLevel1",
+  "toggleHeadingLevel2",
+  "setParagraph",
+  "toggleBulletList",
+  "toggleOrderedList",
+  "toggleTaskList",
+  "toggleCodeBlock",
+  "toggleBlockQuote",
+  "setHorizontalRule",
+  "setHardBreak",
+  "clearFormat",
+  "setImage",
+]);
 </script>
 <template>
-  <button
-    @click="$emit('toggleBold')"
-    class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-3 py-2 text-xl text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-  >
-    <i class="ri-bold"></i>
-  </button>
-  <button
-    @click="storageStore.getFileAll()"
-    class="relative -ml-px inline-flex items-center border border-gray-300 bg-white px-3 py-2 text-xl text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-  >
-    <i class="ri-image-fill"></i>
-  </button>
-  <button
-    class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-white px-3 py-2 text-xl text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-    @click="$emit('toggleCode')"
-  >
-    <i class="ri-code-view"></i>
-  </button>
+  <TiptapMenuButton @click="$emit('toggleBold')" title="Bold">
+    <i class="ri-bold text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuButton @click="$emit('toggleItalic')" title="Italic">
+    <i class="ri-italic text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuButton @click="$emit('toggleStrike')" title="Strike">
+    <i class="ri-strikethrough text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuButton @click="$emit('toggleCode')" title="Code">
+    <i class="ri-code-view text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuButton @click="$emit('toggleHighlight')" title="Highlight">
+    <i class="ri-mark-pen-line text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuDivider />
+  <TiptapMenuButton @click="$emit('toggleHeadingLevel1')" title="Heading 1">
+    <i class="ri-h-1 text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuButton @click="$emit('toggleHeadingLevel2')" title="Heading 2">
+    <i class="ri-h-2 text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuButton @click="$emit('setParagraph')" title="Paragraph">
+    <i class="ri-paragraph text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuButton @click="$emit('toggleBulletList')" title="Bullet List">
+    <i class="ri-list-unordered text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuButton @click="$emit('toggleOrderedList')" title="Ordered List">
+    <i class="ri-list-ordered text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuButton @click="$emit('toggleTaskList')" title="Task List">
+    <i class="ri-list-check-2 text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuButton @click="$emit('toggleCodeBlock')" title="Code Block">
+    <i class="ri-code-box-line text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuDivider />
+  <TiptapMenuButton @click="$emit('toggleBlockQuote')" title="Blockquote">
+    <i class="ri-double-quotes-l text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuButton @click="$emit('setHorizontalRule')" title="Horizontal Rule">
+    <i class="ri-separator text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuDivider />
+  <TiptapMenuButton @click="$emit('setHardBreak')" title="Hard Break">
+    <i class="ri-text-wrap text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuButton @click="$emit('clearFormat')" title="Clear Format">
+    <i class="ri-format-clear text-xl"></i>
+  </TiptapMenuButton>
+
+  <TiptapMenuDivider />
+  <TiptapMenuButton @click="$emit('setImage')" title="Image">
+    <i class="ri-image-fill text-xl"></i>
+  </TiptapMenuButton>
 </template>

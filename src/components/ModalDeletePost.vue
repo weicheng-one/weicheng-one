@@ -13,15 +13,15 @@ const modalsStore = useModalsStore();
 const postStore = usePostStore();
 function deletePost() {
   postStore.postDelete();
-  modalsStore.showDelete = false;
+  modalsStore.showModalDeletePost = false;
 }
 </script>
 <template>
-  <TransitionRoot as="template" :show="modalsStore.showDelete">
+  <TransitionRoot as="template" :show="modalsStore.showModalDeletePost">
     <Dialog
       as="div"
       class="relative z-10"
-      @close="modalsStore.showDelete = false"
+      @close="modalsStore.showModalDeletePost = false"
     >
       <TransitionChild
         as="template"
@@ -34,7 +34,7 @@ function deletePost() {
       >
         <div
           class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-        />
+        ></div>
       </TransitionChild>
 
       <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -57,7 +57,7 @@ function deletePost() {
                 <button
                   type="button"
                   class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  @click="modalsStore.showDelete = false"
+                  @click="modalsStore.showModalDeletePost = false"
                 >
                   <span class="sr-only">Close</span>
                   <XMarkIcon class="h-6 w-6" aria-hidden="true" />
@@ -98,7 +98,7 @@ function deletePost() {
                 <button
                   type="button"
                   class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
-                  @click="modalsStore.showDelete = false"
+                  @click="modalsStore.showModalDeletePost = false"
                 >
                   Cancel
                 </button>

@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/AuthStore";
 import { usePostsStore } from "@/stores/PostsStore";
+import { useEditorStore } from "@/stores/EditorStore";
+
 import {
   collection,
   setDoc,
@@ -21,14 +23,10 @@ export const usePostStore = defineStore("post", () => {
   // Stores
   const authStore = useAuthStore();
   const postsStore = usePostsStore();
+  const editorStore = useEditorStore();
   const notificationStore = useNotificationStore();
 
   const router = useRouter();
-
-  // For Tiptap Editor
-  const timer = ref<NodeJS.Timeout>();
-  const editable = ref<boolean>(false);
-  const autoSave = ref<boolean>(false);
 
   // Post Fields
   const content = ref<string>("");
@@ -80,7 +78,7 @@ export const usePostStore = defineStore("post", () => {
   }
 
   async function postSave() {
-    clearTimeout(timer.value);
+    clearTimeout(editorStore.timer);
     try {
       await updateDoc(postRef.value, {
         content: content.value,
@@ -89,6 +87,11 @@ export const usePostStore = defineStore("post", () => {
         modified: serverTimestamp(),
         title: title.value,
       });
+      notificationStore.showNotification(
+        0,
+        "Operation Successful",
+        "Post saved successfully."
+      );
     } catch (error) {
       console.log(error);
       notificationStore.showNotification(
@@ -99,7 +102,7 @@ export const usePostStore = defineStore("post", () => {
     }
   }
   async function postPublish() {
-    clearTimeout(timer.value);
+    clearTimeout(editorStore.timer);
     try {
       if (!date.value) {
         await updateDoc(postRef.value, {
@@ -120,17 +123,22 @@ export const usePostStore = defineStore("post", () => {
           title: title.value,
         });
       }
+      notificationStore.showNotification(
+        0,
+        "Operation Successful",
+        "Post published successfully."
+      );
     } catch (error) {
       console.log(error);
       notificationStore.showNotification(
         1,
-        "Something went wrong!",
+        "Something Went Wrong!",
         "Failed to publish post, please contact technical support."
       );
     }
   }
   async function postUpdate() {
-    clearTimeout(timer.value);
+    clearTimeout(editorStore.timer);
     try {
       await updateDoc(postRef.value, {
         content: content.value,
@@ -139,6 +147,11 @@ export const usePostStore = defineStore("post", () => {
         modified: serverTimestamp(),
         title: title.value,
       });
+      notificationStore.showNotification(
+        0,
+        "Operation Successful",
+        "Post updated successfully."
+      );
     } catch (error) {
       console.log(error);
       notificationStore.showNotification(
@@ -188,11 +201,16 @@ export const usePostStore = defineStore("post", () => {
       );
     }
   }
-  async function postDelete() {
+  async function postDelete(postId: string) {
     try {
-      await deleteDoc(doc(getFirestore(), "posts", postId.value));
+      await deleteDoc(doc(getFirestore(), "posts", postId));
       postsStore.postsAll = postsStore.postsAll.filter(
-        (post) => post.postId != postId.value
+        (p) => p.postId != postId
+      );
+      notificationStore.showNotification(
+        0,
+        "Operation Successful",
+        "Post has been successfully deleted."
       );
     } catch (error) {
       console.log(error);
@@ -206,13 +224,10 @@ export const usePostStore = defineStore("post", () => {
 
   return {
     date,
-    timer,
     content,
     status,
     title,
     postId,
-    editable,
-    autoSave,
     imageUrl,
     postNew,
     postSave,

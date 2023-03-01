@@ -1,43 +1,98 @@
 import { defineStore } from "pinia";
-import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  listAll,
+  getDownloadURL,
+  uploadBytes,
+  deleteObject,
+} from "firebase/storage";
 import { ref as vueRef } from "vue";
 import { useLocalStorage } from "@vueuse/core";
+import { useModalsStore } from "@/stores/ModalsStore";
+import { useNotificationStore } from "@/stores/NotificationStore";
 
 export const useStorageStore = defineStore("storage", () => {
+  const modalsStore = useModalsStore();
+  const notificationStore = useNotificationStore();
   interface Data {
     fullPath: string;
     name: string;
     url: string;
   }
   const storage = getStorage();
-  const open = vueRef(false);
-  const listRef = ref(storage, "images/");
-  const data = useLocalStorage<Data[]>("storage:data", []);
-  const latestData = useLocalStorage("storage:latestData", false);
+  const openFileManager = vueRef(false);
+  const imagesRef = ref(storage, "images/");
+  const files = useLocalStorage<Data[]>("storage:data", []);
 
-  async function getFileAll() {
-    if (!latestData.value) {
-      //Start getting all files
-      try {
-        const res = await listAll(listRef);
-        res.items.forEach(async (itemRef) => {
-          const url = await getDownloadURL(ref(storage, itemRef.fullPath));
-          data.value.push({
-            fullPath: itemRef.fullPath,
-            name: itemRef.name,
-            url: url,
-          });
+  async function filesGet() {
+    //Start getting all files
+    files.value = [];
+    try {
+      const res = await listAll(imagesRef);
+      res.items.forEach(async (itemRef) => {
+        const url = await getDownloadURL(ref(storage, itemRef.fullPath));
+        files.value.push({
+          fullPath: itemRef.fullPath,
+          name: itemRef.name,
+          url: url,
         });
-        open.value = true;
-        latestData.value = true;
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      open.value = true;
+      });
+      openFileManager.value = true;
+    } catch (error) {
+      console.log(error);
+      notificationStore.showNotification(
+        1,
+        "Something went wrong!",
+        "Failed to get posts, please contact technical support."
+      );
     }
   }
-  // Find all the prefixes and items.
 
-  return { getFileAll, open, data, latestData };
+  async function fileUpload(file: File) {
+    const storageRef = ref(storage, `images/${file.name}`);
+
+    // 'file' comes from the Blob or File API
+    try {
+      const snapshot = await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(
+        ref(storage, snapshot.metadata.fullPath)
+      );
+      files.value.push({
+        fullPath: snapshot.metadata.fullPath,
+        name: snapshot.metadata.name,
+        url: url,
+      });
+    } catch (error) {
+      notificationStore.showNotification(
+        1,
+        "Something went wrong!",
+        "Failed to upload file, please contact technical support."
+      );
+    }
+  }
+  async function fileDelete(fileFullPath: string) {
+    console.log("Delete File...");
+    modalsStore.showModalDeleteFile = false;
+    const fileRef = ref(storage, `${fileFullPath}`);
+
+    // Delete the file
+    try {
+      deleteObject(fileRef);
+      files.value = files.value.filter((file) => file.fullPath != fileFullPath);
+    } catch (error) {
+      notificationStore.showNotification(
+        1,
+        "Something went wrong!",
+        "Failed to delete file, please contact technical support."
+      );
+    }
+  }
+  return {
+    filesGet,
+    fileUpload,
+    fileDelete,
+    openFileManager,
+    files,
+  };
 });

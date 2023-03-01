@@ -6,10 +6,13 @@ import { useAuthStore } from "@/stores/AuthStore";
 
 const mobileMenuOpen = ref(false);
 const authStore = useAuthStore();
-
 const navigation = [
   { name: "Posts", href: { name: "home" } },
-  { name: "Posts Management", href: { name: "posts-management" } },
+  {
+    name: "Posts Management",
+    href: { name: "posts-management" },
+    hidden: true,
+  },
 ];
 </script>
 <template>
@@ -43,6 +46,9 @@ const navigation = [
           v-for="item in navigation"
           :key="item.name"
           :to="item.href"
+          :class="{
+            hidden: item.hidden && Object.keys(authStore.user).length === 0,
+          }"
           class="text-sm font-semibold leading-6 text-gray-900"
           >{{ item.name }}</RouterLink
         >

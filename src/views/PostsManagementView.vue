@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import HomeHeader from "@/components/HomeHeader.vue";
-import ModalDelete from "@/components/ModalDelete.vue";
+import ModalDelete from "@/components/ModalDeletePost.vue";
 import { usePostStore } from "@/stores/PostStore";
 import { usePostsStore } from "@/stores/PostsStore";
 import { useModalsStore } from "@/stores/ModalsStore";
@@ -15,10 +15,10 @@ onMounted(() => {
 function dateFormat(date: number) {
   return useDateFormat(date * 1000, "YYYY/MM/DD hh:mm").value;
 }
-function showDeleteModal(title: string, postId: string) {
-  postStore.title = title === "" ? "Untitled" : title;
-  postStore.postId = postId;
-  modalsStore.showDelete = true;
+function postDelete(postId: string, title: string) {
+  if (window.confirm(`Do you want to delete "${title || "Untitled"}"?`)) {
+    postStore.postDelete(postId);
+  }
 }
 </script>
 <template>
@@ -96,7 +96,7 @@ function showDeleteModal(title: string, postId: string) {
             >
               <RouterLink
                 :to="{ name: 'post-edit', params: { postId: post.postId } }"
-                class="text-indigo-600 hover:text-indigo-900"
+                class="text-indigo-500 hover:text-indigo-600"
                 >Edit<span class="sr-only"
                   >, {{ post.postId }}</span
                 ></RouterLink
@@ -107,8 +107,8 @@ function showDeleteModal(title: string, postId: string) {
             >
               <a
                 href="javascript:;"
-                @click="showDeleteModal(post.title, post.postId)"
-                class="text-red-600 hover:text-red-900"
+                @click="postDelete(post.postId, post.title)"
+                class="text-red-500 hover:text-red-600"
                 >Delete<span class="sr-only">, {{ post.postId }}</span></a
               >
             </td>

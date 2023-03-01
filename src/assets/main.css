@@ -1,1 +1,55 @@
-@import url("@/assets/base.css");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply text-2xl font-bold my-5;
+  }
+  h2 {
+    @apply text-xl font-bold my-4;
+  }
+  p {
+    @apply my-4;
+  }
+  code {
+    @apply bg-slate-300 text-slate-600;
+  }
+
+  pre {
+    @apply bg-slate-800 rounded-lg my-4 px-4 py-3;
+  }
+
+  pre code {
+    @apply bg-inherit text-slate-50 text-sm;
+  }
+  mark {
+    @apply bg-yellow-200;
+  }
+
+  ul {
+    @apply my-4 px-4 list-disc;
+  }
+  ol {
+    @apply my-4 px-4 list-decimal;
+  }
+
+  ul[data-type="taskList"] {
+    @apply list-none p-0;
+  }
+  ul[data-type="taskList"] li {
+    @apply flex items-center;
+  }
+  ul[data-type="taskList"] li > label {
+    @apply mr-2;
+  }
+  ul[data-type="taskList"] li > div {
+    @apply flex-auto;
+  }
+  blockquote {
+    @apply mx-10 my-4 pl-4 border-l-2 border-solid border-slate-300;
+  }
+  hr {
+    @apply mt-8 border-t-2;
+  }
+}
