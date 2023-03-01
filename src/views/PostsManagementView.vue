@@ -55,12 +55,6 @@ function postDelete(postId: string, title: string) {
               scope="col"
               class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
             >
-              Author
-            </th>
-            <th
-              scope="col"
-              class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
-            >
               Date
             </th>
             <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
@@ -74,25 +68,28 @@ function postDelete(postId: string, title: string) {
         >
           <tr v-for="post in postsStore.postsAll" :key="post.postId">
             <td
-              class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
+              class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0"
             >
               {{ post.title || "Untitled" }}
+              <dl class="font-normal lg:hidden">
+                <dt class="sr-only sm:hidden">Date</dt>
+                <dd class="mt-1 truncate text-gray-500 sm:hidden">
+                  {{
+                    post.status === "draft"
+                      ? `Last Modified ${dateFormat(post.modified.seconds)}`
+                      : `Published ${dateFormat(post.date.seconds)}`
+                  }}
+                </dd>
+              </dl>
             </td>
-            <td
-              class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:table-cell"
-            >
-              {{ post.authorId }}
-            </td>
-            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
               {{
                 post.status === "draft"
                   ? `Last Modified ${dateFormat(post.modified.seconds)}`
                   : `Published ${dateFormat(post.date.seconds)}`
               }}
             </td>
-            <td
-              class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"
-            >
+            <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
               <RouterLink
                 :to="{ name: 'post-edit', params: { postId: post.postId } }"
                 class="text-indigo-500 hover:text-indigo-600"
@@ -116,5 +113,4 @@ function postDelete(postId: string, title: string) {
       </table>
     </div>
   </div>
-  <ModalDelete />
 </template>

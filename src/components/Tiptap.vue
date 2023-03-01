@@ -37,7 +37,7 @@ const editor = useEditor({
   ],
   editorProps: {
     attributes: {
-      class: "border-4 border-slate-900 focus:outline-none px-4 py-5",
+      class: "focus:outline-none",
     },
   },
   editable: editorStore.editable,
@@ -125,43 +125,6 @@ function addMainImageHandle() {
       class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"
     ></div>
   </div>
-  <div
-    v-if="editor"
-    id="editor-header"
-    class="border-t-4 border-l-4 border-r-4 border-slate-900 rounded-t-xl p-1 flex flex-wrap items-center"
-  >
-    <TiptapMenu
-      @toggle-bold="editor?.chain().focus().toggleBold().run()"
-      @toggle-Italic="editor?.chain().focus().toggleItalic().run()"
-      @toggle-strike="editor?.chain().focus().toggleStrike().run()"
-      @toggle-code="editor?.chain().focus().toggleCode().run()"
-      @toggle-highlight="editor?.chain().focus().toggleHighlight().run()"
-      @toggle-heading-level-1="
-        editor?.chain().focus().toggleHeading({ level: 1 }).run()
-      "
-      @toggle-heading-level-2="
-        editor
-          ?.chain()
-          .focus()
-          .toggleHeading({
-            level: 2,
-          })
-          .run()
-      "
-      @set-paragraph="editor?.chain().focus().setParagraph().run()"
-      @toggle-bullet-list="editor?.chain().focus().toggleBulletList().run()"
-      @toggle-ordered-list="editor?.chain().focus().toggleOrderedList().run()"
-      @toggle-task-list="editor?.chain().focus().toggleTaskList().run()"
-      @toggle-code-block="editor?.chain().focus().toggleCodeBlock().run()"
-      @toggle-block-quote="editor?.chain().focus().toggleBlockquote().run()"
-      @set-horizontal-rule="
-        editor?.chain().focus().enter().enter().setHorizontalRule().run()
-      "
-      @set-hard-break="editor?.chain().focus().setHardBreak().run()"
-      @clear-format="editor?.chain().clearNodes().unsetAllMarks().focus().run()"
-      @set-image="storageStore.filesGet()"
-    />
-  </div>
 
   <bubble-menu
     :editor="editor"
@@ -239,12 +202,57 @@ function addMainImageHandle() {
       @set-image="storageStore.filesGet()"
     />
   </floating-menu>
-  <editor-content id="editor-content" :editor="editor" />
-  <div
-    id="editor-footer"
-    class="border-b-4 border-l-4 border-r-4 border-slate-900 rounded-b-xl px-3 py-1 text-xs font-semibold flex justify-end"
-  >
-    WeiCheng | Tiptap Editor
+  <div class="max-h-[26rem] flex flex-col">
+    <div
+      v-if="editor"
+      id="editor-header"
+      class="border-t-4 border-l-4 border-r-4 border-slate-900 rounded-t-xl p-1 flex flex-wrap items-center"
+    >
+      <TiptapMenu
+        @toggle-bold="editor?.chain().focus().toggleBold().run()"
+        @toggle-Italic="editor?.chain().focus().toggleItalic().run()"
+        @toggle-strike="editor?.chain().focus().toggleStrike().run()"
+        @toggle-code="editor?.chain().focus().toggleCode().run()"
+        @toggle-highlight="editor?.chain().focus().toggleHighlight().run()"
+        @toggle-heading-level-1="
+          editor?.chain().focus().toggleHeading({ level: 1 }).run()
+        "
+        @toggle-heading-level-2="
+          editor
+            ?.chain()
+            .focus()
+            .toggleHeading({
+              level: 2,
+            })
+            .run()
+        "
+        @set-paragraph="editor?.chain().focus().setParagraph().run()"
+        @toggle-bullet-list="editor?.chain().focus().toggleBulletList().run()"
+        @toggle-ordered-list="editor?.chain().focus().toggleOrderedList().run()"
+        @toggle-task-list="editor?.chain().focus().toggleTaskList().run()"
+        @toggle-code-block="editor?.chain().focus().toggleCodeBlock().run()"
+        @toggle-block-quote="editor?.chain().focus().toggleBlockquote().run()"
+        @set-horizontal-rule="
+          editor?.chain().focus().enter().enter().setHorizontalRule().run()
+        "
+        @set-hard-break="editor?.chain().focus().setHardBreak().run()"
+        @clear-format="
+          editor?.chain().clearNodes().unsetAllMarks().focus().run()
+        "
+        @set-image="storageStore.filesGet()"
+      />
+    </div>
+    <editor-content
+      id="editor-content"
+      :editor="editor"
+      class="border-4 border-slate-900 focus:outline-none px-4 py-5 overflow-x-hidden overflow-y-auto flex-auto"
+    />
+    <div
+      id="editor-footer"
+      class="border-b-4 border-l-4 border-r-4 border-slate-900 rounded-b-xl px-3 py-1 text-xs font-semibold flex justify-end"
+    >
+      WeiCheng | Tiptap Editor
+    </div>
   </div>
   <TiptapFileManager @set-image="setImage" />
 </template>
