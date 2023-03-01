@@ -9,11 +9,9 @@ import {
 } from "firebase/storage";
 import { ref as vueRef } from "vue";
 import { useLocalStorage } from "@vueuse/core";
-import { useModalsStore } from "@/stores/ModalsStore";
 import { useNotificationStore } from "@/stores/NotificationStore";
 
 export const useStorageStore = defineStore("storage", () => {
-  const modalsStore = useModalsStore();
   const notificationStore = useNotificationStore();
   interface Data {
     fullPath: string;
@@ -73,7 +71,6 @@ export const useStorageStore = defineStore("storage", () => {
   }
   async function fileDelete(fileFullPath: string) {
     console.log("Delete File...");
-    modalsStore.showModalDeleteFile = false;
     const fileRef = ref(storage, `${fileFullPath}`);
 
     // Delete the file
