@@ -108,6 +108,10 @@ const navigation = [
                 v-for="item in navigation"
                 :key="item.name"
                 :to="item.href"
+                :class="{
+                  hidden:
+                    item.hidden && Object.keys(authStore.user).length === 0,
+                }"
                 class="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >{{ item.name }}</RouterLink
               >
@@ -123,7 +127,6 @@ const navigation = [
               <a
                 href="javascript:;"
                 @click="authStore.signOutUser"
-                :to="{ name: 'signin' }"
                 class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
               >
                 Log out

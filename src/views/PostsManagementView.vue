@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import HomeHeader from "@/components/HomeHeader.vue";
-import ModalDelete from "@/components/ModalDeletePost.vue";
 import { usePostStore } from "@/stores/PostStore";
 import { usePostsStore } from "@/stores/PostsStore";
-import { useModalsStore } from "@/stores/ModalsStore";
 import { useDateFormat } from "@vueuse/core";
 import { onMounted } from "vue";
 const postStore = usePostStore();
 const postsStore = usePostsStore();
-const modalsStore = useModalsStore();
 onMounted(() => {
   postsStore.postsAllGet();
 });
@@ -23,7 +20,9 @@ function postDelete(postId: string, title: string) {
 </script>
 <template>
   <HomeHeader />
-  <div class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pt-20 pb-24 sm:pb-32">
+  <div
+    class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pt-5 md:pt-10 pb-24 sm:pb-32"
+  >
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
         <h1 class="text-base font-semibold leading-6 text-gray-900">Posts</h1>
