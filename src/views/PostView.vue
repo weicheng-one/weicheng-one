@@ -14,7 +14,7 @@ const post = postsStore.postsPublished.find(
 
 <template>
   <HomeHeader />
-  <div class="bg-white pt-20 pb-24 sm:pb-32 px-6 lg:px-8" v-if="post">
+  <div class="bg-white pt-5 pb-24 md:pt-10 sm:pb-32 px-6 lg:px-8" v-if="post">
     <div class="mx-auto max-w-3xl text-base leading-7 text-gray-700">
       <img
         v-if="post.imageUrl != '' || post.imageUrl"
