@@ -74,7 +74,7 @@ function toPostView(post: Post) {
                 }}</time
               >
             </div>
-            <div class="group relative">
+            <div class="group relative overflow-hidden">
               <h3
                 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600"
               >
@@ -83,9 +83,10 @@ function toPostView(post: Post) {
                   {{ post.title }}
                 </a>
               </h3>
-              <div class="mt-5 text-sm leading-6 text-gray-600 line-clamp-3">
-                {{ post.excerpt }}
-              </div>
+              <div
+                class="mt-5 text-sm leading-6 text-gray-600 line-clamp-3"
+                v-html="post.excerpt"
+              ></div>
             </div>
           </div>
         </article>
