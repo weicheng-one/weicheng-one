@@ -42,7 +42,7 @@ export const useStorageStore = defineStore("storage", () => {
       notificationStore.showNotification(
         1,
         "Something went wrong!",
-        "Failed to get posts, please contact technical support."
+        "Failed to get files, please contact technical support."
       );
     }
   }

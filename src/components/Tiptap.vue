@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-  useEditor,
-  EditorContent,
-  BubbleMenu,
-  FloatingMenu,
-} from "@tiptap/vue-3";
+import { useEditor, EditorContent } from "@tiptap/vue-3";
 import { usePostStore } from "@/stores/PostStore";
 import { useEditorStore } from "@/stores/EditorStore";
 import { useStorageStore } from "@/stores/StorageStore";
@@ -125,83 +120,6 @@ function addMainImageHandle() {
       class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"
     ></div>
   </div>
-
-  <bubble-menu
-    :editor="editor"
-    :tippy-options="{ duration: 100 }"
-    v-if="editor"
-    class="bg-slate-100 rounded-xl p-1 flex flex-wrap items-center"
-  >
-    <TiptapMenu
-      @toggle-bold="editor?.chain().focus().toggleBold().run()"
-      @toggle-Italic="editor?.chain().focus().toggleItalic().run()"
-      @toggle-strike="editor?.chain().focus().toggleStrike().run()"
-      @toggle-code="editor?.chain().focus().toggleCode().run()"
-      @toggle-highlight="editor?.chain().focus().toggleHighlight().run()"
-      @toggle-heading-level-1="
-        editor?.chain().focus().toggleHeading({ level: 1 }).run()
-      "
-      @toggle-heading-level-2="
-        editor
-          ?.chain()
-          .focus()
-          .toggleHeading({
-            level: 2,
-          })
-          .run()
-      "
-      @set-paragraph="editor?.chain().focus().setParagraph().run()"
-      @toggle-bullet-list="editor?.chain().focus().toggleBulletList().run()"
-      @toggle-ordered-list="editor?.chain().focus().toggleOrderedList().run()"
-      @toggle-task-list="editor?.chain().focus().toggleTaskList().run()"
-      @toggle-code-block="editor?.chain().focus().toggleCodeBlock().run()"
-      @toggle-block-quote="editor?.chain().focus().toggleBlockquote().run()"
-      @set-horizontal-rule="
-        editor?.chain().focus().enter().enter().setHorizontalRule().run()
-      "
-      @set-hard-break="editor?.chain().focus().setHardBreak().run()"
-      @clear-format="editor?.chain().clearNodes().unsetAllMarks().focus().run()"
-      @set-image="storageStore.filesGet()"
-    />
-  </bubble-menu>
-  <floating-menu
-    :editor="editor"
-    :tippy-options="{ duration: 100 }"
-    v-if="editor"
-    class="bg-slate-100 rounded-xl p-1 flex flex-wrap items-center"
-  >
-    <TiptapMenu
-      @toggle-bold="editor?.chain().focus().toggleBold().run()"
-      @toggle-Italic="editor?.chain().focus().toggleItalic().run()"
-      @toggle-strike="editor?.chain().focus().toggleStrike().run()"
-      @toggle-code="editor?.chain().focus().toggleCode().run()"
-      @toggle-highlight="editor?.chain().focus().toggleHighlight().run()"
-      @toggle-heading-level-1="
-        editor?.chain().focus().toggleHeading({ level: 1 }).run()
-      "
-      @toggle-heading-level-2="
-        editor
-          ?.chain()
-          .focus()
-          .toggleHeading({
-            level: 2,
-          })
-          .run()
-      "
-      @set-paragraph="editor?.chain().focus().setParagraph().run()"
-      @toggle-bullet-list="editor?.chain().focus().toggleBulletList().run()"
-      @toggle-ordered-list="editor?.chain().focus().toggleOrderedList().run()"
-      @toggle-task-list="editor?.chain().focus().toggleTaskList().run()"
-      @toggle-code-block="editor?.chain().focus().toggleCodeBlock().run()"
-      @toggle-block-quote="editor?.chain().focus().toggleBlockquote().run()"
-      @set-horizontal-rule="
-        editor?.chain().focus().enter().enter().setHorizontalRule().run()
-      "
-      @set-hard-break="editor?.chain().focus().setHardBreak().run()"
-      @clear-format="editor?.chain().clearNodes().unsetAllMarks().focus().run()"
-      @set-image="storageStore.filesGet()"
-    />
-  </floating-menu>
   <div class="max-h-[26rem] flex flex-col">
     <div
       v-if="editor"
