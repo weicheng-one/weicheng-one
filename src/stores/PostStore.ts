@@ -32,7 +32,8 @@ export const usePostStore = defineStore("post", () => {
   const content = ref<string>("");
   const date = ref<Timestamp | null>(null);
   function excerpt(): string {
-    const string = content.value.match(/<p>[^<>]+<\/p>/g);
+    const string = content.value.match(/<p>[^<>]+<\/p>/);
+    console.log(string);
     return string ? string.join("") : "";
   }
   const imageUrl = ref<string>("");
