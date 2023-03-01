@@ -20,10 +20,10 @@ const post = postsStore.postsPublished.find(
         v-if="post.imageUrl != '' || post.imageUrl"
         :src="post.imageUrl"
         alt=""
-        class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2] mx-12 mb-5"
+        class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2] mb-5"
       />
       <h1
-        class="mt-2 mb-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mx-12 prose prose-lg prose-indigo"
+        class="mt-2 mb-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl prose prose-lg prose-indigo"
       >
         {{ post.title }}
       </h1>
