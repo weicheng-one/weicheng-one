@@ -76,7 +76,6 @@ export const usePostStore = defineStore('post', () => {
       notificationStore.showNotification(1, error.code, error.message);
     }
   }
-
   async function postSave() {
     clearTimeout(editorStore.timer);
     try {
