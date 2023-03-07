@@ -47,7 +47,7 @@ const navigation = [
           :key="item.name"
           :to="item.href"
           :class="{
-            hidden: item.hidden && Object.keys(authStore.user).length === 0,
+            hidden: item.hidden && !authStore.user,
           }"
           class="text-sm font-semibold leading-6 text-gray-900"
           >{{ item.name }}</RouterLink
@@ -55,7 +55,7 @@ const navigation = [
       </div>
       <div
         class="hidden lg:flex lg:flex-1 lg:justify-end"
-        v-if="Object.keys(authStore.user).length === 0"
+        v-if="!authStore.user"
       >
         <RouterLink
           :to="{ name: 'signin' }"
@@ -109,14 +109,13 @@ const navigation = [
                 :key="item.name"
                 :to="item.href"
                 :class="{
-                  hidden:
-                    item.hidden && Object.keys(authStore.user).length === 0,
+                  hidden: item.hidden && !authStore.user,
                 }"
                 class="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >{{ item.name }}</RouterLink
               >
             </div>
-            <div class="py-6" v-if="Object.keys(authStore.user).length === 0">
+            <div class="py-6" v-if="!authStore.user">
               <RouterLink
                 :to="{ name: 'signin' }"
                 class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"

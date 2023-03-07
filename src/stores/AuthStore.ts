@@ -1,54 +1,66 @@
-import { defineStore } from "pinia";
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { useNotificationStore } from "./NotificationStore";
-import { useLocalStorage } from "@vueuse/core";
-import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { defineStore } from 'pinia';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  sendPasswordResetEmail
+} from 'firebase/auth';
+import { useNotificationStore } from './NotificationStore';
+import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 
-export const useAuthStore = defineStore("auth", () => {
+export const useAuthStore = defineStore('auth', () => {
   const notificationStore = useNotificationStore();
-  const auth = ref(getAuth());
-  const user = useLocalStorage("auth:user", { ...auth.value.currentUser });
+  const auth = getAuth();
+  const user = ref(auth.currentUser);
   const router = useRouter();
 
-  function signInUser(email: string, password: string) {
-    signInWithEmailAndPassword(auth.value, email, password)
-      .then(() => {
-        user.value = { ...auth.value.currentUser };
-        router.push({ name: "home" });
-        notificationStore.showNotification(
-          0,
-          "Signed in",
-          `Hi ${
-            auth.value.currentUser?.displayName
-              ? auth.value.currentUser?.displayName
-              : auth.value.currentUser?.email
-          }, welcome back!`
-        );
-      })
-      .catch((error) => {
-        notificationStore.showNotification(1, error.code, error.message);
-      });
+  onAuthStateChanged(auth, (u) => {
+    user.value = u;
+  });
+
+  async function signInUser(email: string, password: string) {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      router.push({ name: 'home' });
+      notificationStore.showNotification(
+        0,
+        'Signed in',
+        `Hi ${user.value?.displayName ? user.value?.displayName : user.value?.email}, welcome back!`
+      );
+    } catch (error: any) {
+      notificationStore.showNotification(1, error.code, error.message);
+    }
   }
-  function signOutUser() {
-    signOut(auth.value)
-      .then(() => {
-        user.value = {};
-        notificationStore.showNotification(
-          0,
-          "Sign-out successful.",
-          "See you next time!"
-        );
-      })
-      .catch((error) => {
-        // An error happened.
-        console.log(error);
-      });
+  async function signOutUser() {
+    try {
+      await signOut(auth);
+      notificationStore.showNotification(
+        0,
+        'Successfully logged out',
+        'Welcome to log in again to gain full access.'
+      );
+    } catch (error: any) {
+      notificationStore.showNotification(1, error.code, error.message);
+    }
+  }
+  async function forgotPassword(email: string) {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      notificationStore.showNotification(
+        0,
+        'Operation succeeded',
+        'The password reset link has been sent to your email. Please click the link in the email to reset your password.'
+      );
+    } catch (error: any) {
+      notificationStore.showNotification(1, error.code, error.message);
+    }
   }
   return {
-    auth,
     user,
     signInUser,
     signOutUser,
+    forgotPassword
   };
 });

@@ -3,10 +3,10 @@ import HomeHeader from "@/components/HomeHeader.vue";
 import { usePostStore } from "@/stores/PostStore";
 import { usePostsStore } from "@/stores/PostsStore";
 import { useDateFormat } from "@vueuse/core";
-import { onMounted } from "vue";
+import { onBeforeMount } from "vue";
 const postStore = usePostStore();
 const postsStore = usePostsStore();
-onMounted(() => {
+onBeforeMount(() => {
   postsStore.postsAllGet();
 });
 function dateFormat(date: number) {

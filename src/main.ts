@@ -10,7 +10,7 @@ import "./assets/main.css";
 import "remixicon/fonts/remixicon.css";
 
 const app = createApp(App);
-app.use(router);
 app.use(createPinia());
+app.use(router);
 app.use(plugin, defaultConfig);
 app.mount("#app");

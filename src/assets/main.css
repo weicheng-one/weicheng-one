@@ -34,16 +34,16 @@
     @apply my-4 px-4 list-decimal;
   }
 
-  ul[data-type="taskList"] {
+  ul[data-type='taskList'] {
     @apply list-none p-0;
   }
-  ul[data-type="taskList"] li {
+  ul[data-type='taskList'] li {
     @apply flex items-center;
   }
-  ul[data-type="taskList"] li > label {
+  ul[data-type='taskList'] li > label {
     @apply mr-2;
   }
-  ul[data-type="taskList"] li > div {
+  ul[data-type='taskList'] li > div {
     @apply flex-auto;
   }
   blockquote {
@@ -51,6 +51,9 @@
   }
   hr {
     @apply mt-8 border-t-2;
+  }
+  p > a {
+    @apply text-blue-500 underline decoration-solid cursor-pointer;
   }
 }
 

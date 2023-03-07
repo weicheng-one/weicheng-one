@@ -2,7 +2,6 @@
 import PostEditHeading from "@/components/PostEditHeading.vue";
 import PostEditContent from "@/components/PostEditContent.vue";
 import { usePostStore } from "@/stores/PostStore";
-
 //取得從路由 params 過來的 postId
 const props = defineProps({
   postId: {
