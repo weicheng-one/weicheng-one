@@ -13,7 +13,6 @@
     "@formkit/vue": "^1.0.0-beta.15-6f87a41",
     "@headlessui/vue": "^1.7.7",
     "@heroicons/vue": "^2.0.13",
-    "@tailwindcss/forms": "^0.5.3",
     "@tiptap/extension-blockquote": "^2.0.0-beta.209",
     "@tiptap/extension-bubble-menu": "^2.0.0-beta.209",
     "@tiptap/extension-code": "^2.0.0-beta.218",
@@ -36,6 +35,7 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@tailwindcss/typography": "^0.5.9",
     "@vitejs/plugin-vue": "^4.0.0",

@@ -112,6 +112,7 @@ function tabSwitch(name: string) {
       break;
     case 'File Management':
       filesGet();
+      break;
     default:
       break;
   }

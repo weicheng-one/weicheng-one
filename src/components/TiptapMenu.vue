@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { useStorageStore } from '@/stores/StorageStore';
 import TiptapMenuButton from './TiptapMenuButton.vue';
 import TiptapMenuDivider from './TiptapMenuDivider.vue';
-const storageStore = useStorageStore();
 defineEmits([
   'toggleBold',
   'toggleItalic',
