@@ -9,25 +9,24 @@ import {
   limit,
   startAfter
 } from 'firebase/firestore';
-import { useLocalStorage } from '@vueuse/core';
 import { useNotificationStore } from '@/stores/NotificationStore';
 import { ref } from 'vue';
 import type Post from '@/types/Post';
-import type { DocumentData } from 'firebase/firestore';
+import type { Query, QueryDocumentSnapshot } from 'firebase/firestore';
 
 export const usePostsStore = defineStore('posts', () => {
   const db = getFirestore();
   const notificationStore = useNotificationStore();
-  const postsAll = useLocalStorage<Post[]>('posts:postsAll', []);
-  const postsPublished = useLocalStorage<Post[]>('posts:postsPublished', []);
+  const postsAll = ref<Post[]>([]);
+  const postsPublished = ref<Post[]>([]);
   const showBtn = ref<boolean>(false);
   const lastResult = ref<boolean>(false);
-  const lastVisible = ref<DocumentData>();
+  const lastVisible = ref<QueryDocumentSnapshot>();
+  const q = ref<Query>();
 
   async function postsPublishedGet() {
-    let q = null;
     if (lastVisible.value) {
-      q = query(
+      q.value = query(
         collection(db, 'posts'),
         where('status', '==', 'publish'),
         orderBy('date', 'desc'),
@@ -36,7 +35,7 @@ export const usePostsStore = defineStore('posts', () => {
       );
     } else {
       postsPublished.value = [];
-      q = query(
+      q.value = query(
         collection(db, 'posts'),
         where('status', '==', 'publish'),
         orderBy('date', 'desc'),
@@ -44,7 +43,7 @@ export const usePostsStore = defineStore('posts', () => {
       );
     }
     try {
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(q.value);
       querySnapshot.forEach((post) => {
         const data = post.data();
         postsPublished.value.push({
@@ -71,10 +70,19 @@ export const usePostsStore = defineStore('posts', () => {
     }
   }
   async function postsAllGet() {
-    const q = query(collection(db, 'posts'), orderBy('date', 'desc'), limit(10));
-    try {
-      const querySnapshot = await getDocs(q);
+    if (lastVisible.value) {
+      q.value = query(
+        collection(db, 'posts'),
+        orderBy('date', 'desc'),
+        startAfter(lastVisible.value),
+        limit(6)
+      );
+    } else {
       postsAll.value = [];
+      q.value = query(collection(db, 'posts'), orderBy('date', 'desc'), limit(6));
+    }
+    try {
+      const querySnapshot = await getDocs(q.value);
       querySnapshot.forEach((post) => {
         const data = post.data();
         postsAll.value.push({
@@ -90,13 +98,28 @@ export const usePostsStore = defineStore('posts', () => {
           title: data.title
         });
       });
+      lastVisible.value = querySnapshot.docs[querySnapshot.docs.length - 1];
+      if (!lastVisible.value) {
+        lastResult.value = true;
+      } else {
+        showBtn.value = true;
+      }
     } catch (error: any) {
       notificationStore.showNotification(1, error.code, error.message);
     }
   }
+
+  function $reset() {
+    postsPublished.value = [];
+    postsAll.value = [];
+    showBtn.value = false;
+    lastResult.value = false;
+    lastVisible.value = undefined;
+  }
   return {
     postsPublishedGet,
     postsAllGet,
+    $reset,
     postsPublished,
     postsAll,
     lastResult,
