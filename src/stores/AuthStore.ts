@@ -9,11 +9,12 @@ import {
 import { useNotificationStore } from './NotificationStore';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import type { User } from 'firebase/auth';
 
 export const useAuthStore = defineStore('auth', () => {
   const notificationStore = useNotificationStore();
   const auth = getAuth();
-  const user = ref(auth.currentUser);
+  const user = ref<User | null>();
   const router = useRouter();
 
   onAuthStateChanged(auth, (u) => {

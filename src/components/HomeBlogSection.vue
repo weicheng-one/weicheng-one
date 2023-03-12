@@ -81,7 +81,6 @@ function toPostView(post: Post) {
           </div>
         </article>
       </div>
-      <button @click="postsStore.postsLoadMore()">Load More</button>
       <HomeBlogPagination />
     </div>
   </div>
