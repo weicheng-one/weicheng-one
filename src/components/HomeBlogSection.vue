@@ -21,9 +21,10 @@ function toPostView(post: Post) {
   <div class="bg-white pt-5 pb-24 md:pt-10 sm:pb-32">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">創造自我價值</h2>
+        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">最新文章</h2>
         <p class="mt-2 text-lg leading-8 text-gray-600">
-          此部落格為個人部落格，主要記錄一些正在學習和有興趣的事情。
+          歡迎來到我的個人部落格，這裡主要記錄一些我正在學習和有興趣的事情。如果對文章或網站有什麼建議，歡迎透過Facebook
+          與我聯絡!
         </p>
       </div>
       <div
