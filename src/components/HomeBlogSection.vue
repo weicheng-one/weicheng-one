@@ -13,8 +13,7 @@ onMounted(() => {
   postsStore.postsPublishedGet();
 });
 function toPostView(post: Post) {
-  postStore.postId = post.postId;
-  router.push({ name: 'post', params: { slug: post.slug } });
+  router.push({ name: 'post', params: { postId: post.postId } });
 }
 </script>
 <template>
@@ -76,9 +75,10 @@ function toPostView(post: Post) {
                   {{ post.title }}
                 </a>
               </h3>
-              <p class="mt-5 text-sm leading-6 text-gray-600 line-clamp-3">
-                {{ post.excerpt.replace(/<\/?.+?>/g, '') }}
-              </p>
+              <p
+                class="mt-5 text-sm leading-6 text-gray-600 line-clamp-3"
+                v-html="post.excerpt"
+              ></p>
             </div>
           </div>
         </article>

@@ -54,7 +54,6 @@ export const usePostsStore = defineStore('posts', () => {
           imageUrl: data.imageUrl,
           modified: data.modified,
           postId: post.id,
-          slug: data.slug,
           status: data.status,
           title: data.title
         });
@@ -93,7 +92,6 @@ export const usePostsStore = defineStore('posts', () => {
           imageUrl: data.imageUrl,
           modified: data.modified,
           postId: post.id,
-          slug: data.slug,
           status: data.status,
           title: data.title
         });

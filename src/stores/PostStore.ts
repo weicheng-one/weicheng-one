@@ -29,17 +29,29 @@ export const usePostStore = defineStore('post', () => {
   const router = useRouter();
 
   // Post Fields
-  const content = ref<string>('');
-  const date = ref<Timestamp | null>(null);
-  function excerpt(): string {
-    const string = content.value.match(/<p>[^<>]+<\/p>/);
-    return string ? string.join('') : '';
-  }
-  const imageUrl = ref<string>('');
-  const postId = useLocalStorage<string>('post:postId', '');
+  const content = ref('');
+  const date = ref<Timestamp>();
+  const excerpt = computed(() => {
+    const regex = /<p>(.*?)<\/p>/i;
+    const match = regex.exec(content.value);
+    if (match) {
+      return match[1];
+    } else {
+      return '';
+    }
+  });
+  const imageUrl = ref('');
+  const postId = ref('');
   const status = ref<'publish' | 'draft'>('draft');
-  const title = ref<string>('');
+  const title = ref('');
 
+  function $reset() {
+    imageUrl.value = '';
+    postId.value = '';
+    content.value = '';
+    title.value = '';
+    date.value = undefined;
+  }
   // For Fetch Data
   const postRef = computed(() => {
     return doc(getFirestore(), 'posts', postId.value);
@@ -56,7 +68,6 @@ export const usePostStore = defineStore('post', () => {
         excerpt: '',
         imageUrl: '',
         modified: serverTimestamp(),
-        slug: newPostRef.id,
         status: 'draft',
         title: ''
       });
@@ -76,7 +87,7 @@ export const usePostStore = defineStore('post', () => {
     try {
       await updateDoc(postRef.value, {
         content: content.value,
-        excerpt: excerpt(),
+        excerpt: excerpt.value,
         imageUrl: imageUrl.value,
         modified: serverTimestamp(),
         title: title.value
@@ -93,7 +104,7 @@ export const usePostStore = defineStore('post', () => {
         await updateDoc(postRef.value, {
           content: content.value,
           date: serverTimestamp(),
-          excerpt: excerpt(),
+          excerpt: excerpt.value,
           imageUrl: imageUrl.value,
           modified: serverTimestamp(),
           status: 'publish',
@@ -102,7 +113,7 @@ export const usePostStore = defineStore('post', () => {
       } else {
         await updateDoc(postRef.value, {
           content: content.value,
-          excerpt: excerpt(),
+          excerpt: excerpt.value,
           modified: serverTimestamp(),
           status: 'publish',
           title: title.value
@@ -123,7 +134,7 @@ export const usePostStore = defineStore('post', () => {
     try {
       await updateDoc(postRef.value, {
         content: content.value,
-        excerpt: excerpt(),
+        excerpt: excerpt.value,
         imageUrl: imageUrl.value,
         modified: serverTimestamp(),
         title: title.value
@@ -181,6 +192,7 @@ export const usePostStore = defineStore('post', () => {
     title,
     postId,
     imageUrl,
+    $reset,
     postNew,
     postSave,
     postPublish,
