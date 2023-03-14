@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import HomeHeader from '@/components/HomeHeader.vue';
-import { usePostStore } from '@/stores/PostStore';
 import { usePostsStore } from '@/stores/PostsStore';
 import { useDateFormat } from '@vueuse/core';
 

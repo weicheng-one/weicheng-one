@@ -3,10 +3,20 @@ import HomeHeader from '@/components/HomeHeader.vue';
 import PostsManagementMorePosts from '@/components/PostsManagementMorePosts.vue';
 import { usePostStore } from '@/stores/PostStore';
 import { usePostsStore } from '@/stores/PostsStore';
+import { useAuthStore } from '@/stores/AuthStore';
 import { useDateFormat } from '@vueuse/core';
-import { onMounted } from 'vue';
+import { onMounted, onBeforeMount } from 'vue';
+import { useRouter } from 'vue-router';
 const postStore = usePostStore();
 const postsStore = usePostsStore();
+const authStore = useAuthStore();
+const router = useRouter();
+
+onBeforeMount(() => {
+  if (!authStore.user) {
+    router.push({ name: 'signin' });
+  }
+});
 onMounted(() => {
   postsStore.$reset();
   postsStore.postsAllGet();
