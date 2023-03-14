@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { Dialog, DialogPanel } from "@headlessui/vue";
-import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
-import { useAuthStore } from "@/stores/AuthStore";
+import { ref } from 'vue';
+import { Dialog, DialogPanel } from '@headlessui/vue';
+import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { useAuthStore } from '@/stores/AuthStore';
 
 const mobileMenuOpen = ref(false);
 const authStore = useAuthStore();
 const navigation = [
-  { name: "Posts", href: { name: "home" } },
+  { name: 'Posts', href: { name: 'home' } },
   {
-    name: "Posts Management",
-    href: { name: "posts-management" },
-    hidden: true,
-  },
+    name: 'Posts Management',
+    href: { name: 'posts-management' },
+    hidden: true
+  }
 ];
 </script>
 <template>
@@ -47,38 +47,28 @@ const navigation = [
           :key="item.name"
           :to="item.href"
           :class="{
-            hidden: item.hidden && !authStore.user,
+            hidden: item.hidden && !authStore.user
           }"
           class="text-sm font-semibold leading-6 text-gray-900"
           >{{ item.name }}</RouterLink
         >
       </div>
-      <div
-        class="hidden lg:flex lg:flex-1 lg:justify-end"
-        v-if="!authStore.user"
-      >
-        <RouterLink
-          :to="{ name: 'signin' }"
-          class="text-sm font-semibold leading-6 text-gray-900"
+      <div class="hidden lg:flex lg:flex-1 lg:justify-end" v-if="!authStore.user">
+        <RouterLink :to="{ name: 'signin' }" class="text-sm font-semibold leading-6 text-gray-900"
           >Log in <span aria-hidden="true">&rarr;</span></RouterLink
         >
       </div>
       <div class="hidden lg:flex lg:flex-1 lg:justify-end" v-else>
         <a
           href="javascript:;"
-          @click="authStore.signOutUser"
+          @click="authStore.userSignOut"
           class="text-sm font-semibold leading-6 text-gray-900"
         >
           Log out <span aria-hidden="true">&rarr;</span>
         </a>
       </div>
     </nav>
-    <Dialog
-      as="div"
-      class="lg:hidden"
-      @close="mobileMenuOpen = false"
-      :open="mobileMenuOpen"
-    >
+    <Dialog as="div" class="lg:hidden" @close="mobileMenuOpen = false" :open="mobileMenuOpen">
       <div class="fixed inset-0 z-10" />
       <DialogPanel
         class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
@@ -109,7 +99,7 @@ const navigation = [
                 :key="item.name"
                 :to="item.href"
                 :class="{
-                  hidden: item.hidden && !authStore.user,
+                  hidden: item.hidden && !authStore.user
                 }"
                 class="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >{{ item.name }}</RouterLink
@@ -125,7 +115,7 @@ const navigation = [
             <div class="py-6" v-else>
               <a
                 href="javascript:;"
-                @click="authStore.signOutUser"
+                @click="authStore.userSignOut"
                 class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
               >
                 Log out

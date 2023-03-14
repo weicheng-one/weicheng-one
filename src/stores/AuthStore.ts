@@ -14,14 +14,20 @@ import { useLocalStorage } from '@vueuse/core';
 export const useAuthStore = defineStore('auth', () => {
   const notificationStore = useNotificationStore();
   const auth = getAuth();
-  const user = useLocalStorage<User | null>('auth', null);
+  const user = useLocalStorage<User | null>('auth:user', null);
   const router = useRouter();
+  const route = useRoute();
 
-  async function signInUser(email: string, password: string) {
+  async function userSignIn(email: string, password: string) {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       user.value = auth.currentUser;
-      router.push({ name: 'home' });
+      const redirect = route.query.redirect;
+      if (redirect) {
+        router.push(`${redirect}`);
+      } else {
+        router.push({ name: 'home' });
+      }
       notificationStore.showNotification(
         0,
         'Signed in',
@@ -31,10 +37,10 @@ export const useAuthStore = defineStore('auth', () => {
       notificationStore.showNotification(1, error.code, error.message);
     }
   }
-  async function signOutUser() {
+  async function userSignOut() {
     try {
       await signOut(auth);
-      user.value = auth.currentUser;
+      user.value = null;
       router.push({ name: 'home' });
       notificationStore.showNotification(
         0,
@@ -45,7 +51,7 @@ export const useAuthStore = defineStore('auth', () => {
       notificationStore.showNotification(1, error.code, error.message);
     }
   }
-  async function forgotPassword(email: string) {
+  async function userForgot(email: string) {
     try {
       await sendPasswordResetEmail(auth, email);
       notificationStore.showNotification(
@@ -59,8 +65,8 @@ export const useAuthStore = defineStore('auth', () => {
   }
   return {
     user,
-    signInUser,
-    signOutUser,
-    forgotPassword
+    userSignIn,
+    userSignOut,
+    userForgot
   };
 });

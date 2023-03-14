@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import type { RouteLocationNormalized } from 'vue-router';
+import { ref } from 'vue';
 
 const HomeView = () => import('@/views/HomeView.vue');
 const SigninView = () => import('@/views/SigninView.vue');
@@ -15,18 +17,26 @@ const routes = [
   {
     path: '/signin',
     name: 'signin',
-    component: SigninView
+    component: SigninView,
+    beforeEnter: (to: RouteLocationNormalized, from: RouteLocationNormalized) => {
+      const user = localStorage.getItem('auth:user');
+      if (user) {
+        router.push({ name: 'home' });
+      }
+    }
   },
   {
     path: '/admin/post-edit/:postId',
     name: 'post-edit',
     component: PostEditView,
+    meta: { requiresAuth: true },
     props: true
   },
   {
     path: '/admin/posts-management',
     name: 'posts-management',
-    component: PostsManagementView
+    component: PostsManagementView,
+    meta: { requiresAuth: true }
   },
   {
     path: '/post/:postId',
@@ -39,6 +49,13 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
+});
+
+router.beforeEach((to, from) => {
+  const user = localStorage.getItem('auth:user');
+  if (to.meta.requiresAuth && !user) {
+    router.push({ name: 'signin', query: { redirect: to.fullPath } });
+  }
 });
 
 export default router;

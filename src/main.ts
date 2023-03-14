@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+import firebaseInit from '@/scripts/initFirebase';
 //FormKit
 import { plugin, defaultConfig } from '@formkit/vue';
 // App and Router
@@ -9,6 +10,7 @@ import router from '@/router';
 import '@/assets/main.css';
 import 'remixicon/fonts/remixicon.css';
 
+firebaseInit();
 const pinia = createPinia();
 const app = createApp(App);
 app.use(pinia);

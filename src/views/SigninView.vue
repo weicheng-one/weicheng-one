@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/AuthStore';
+import { useRoute } from 'vue-router';
 import { ref } from 'vue';
 import type Data from '@/types/Data';
 const authStore = useAuthStore();
-
+const route = useRoute();
 function loginHandler(data: Data) {
-  authStore.signInUser(data.email, data.password);
+  authStore.userSignIn(data.email, data.password);
 }
 function forgotHandler(data: Data) {
-  authStore.forgotPassword(data.email);
+  authStore.userForgot(data.email);
   forgot.value = false;
 }
 const forgot = ref(false);
